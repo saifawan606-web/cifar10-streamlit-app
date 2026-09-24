@@ -22,6 +22,7 @@ def load_cifar_model():
     model = tf.keras.models.load_model('final_cifar10_cnn_model.keras')
     return model
 
+
 try:
     model = load_cifar_model()
     model_loaded = True
