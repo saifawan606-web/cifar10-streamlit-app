@@ -16,12 +16,24 @@ CLASS_NAMES = [
     'Dog', 'Frog', 'Horse', 'Ship', 'Truck'
 ]
 
-# Load Trained Model
+# Load Trained Model (Dynamic File Search)
+import os
+
 @st.cache_resource
 def load_cifar_model():
-    model = tf.keras.models.load_model('final_cifar10_cnn_model.keras')
-    return model
-
+    model_filename = "final_cifar10_cnn_model.keras"
+    
+    # Check if model exists in current folder
+    if os.path.exists(model_filename):
+        return tf.keras.models.load_model(model_filename, compile=False)
+    
+    # Search in all subfolders (like CIFER_APP)
+    for root, dirs, files in os.walk("."):
+        if model_filename in files:
+            full_path = os.path.join(root, model_filename)
+            return tf.keras.models.load_model(full_path, compile=False)
+            
+    raise FileNotFoundError(f"Could not find {model_filename} anywhere in repo.")
 
 try:
     model = load_cifar_model()
